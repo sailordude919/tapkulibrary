@@ -90,7 +90,7 @@ static UIImage *tileImage;
 }
 - (NSArray *) accessibleElements{
     if (_accessibleElements!=nil) return _accessibleElements;
-
+    
     _accessibleElements = [[NSMutableArray alloc] init];
 	
 	
@@ -153,7 +153,7 @@ static UIImage *tileImage;
 		
 		NSDateComponents *info2 = [previousMonth dateComponentsWithTimeZone:timeZone];
 		
-		NSInteger preDayCnt = [previousMonth daysBetweenDate:currentMonth];		
+		NSInteger preDayCnt = [previousMonth daysBetweenDate:currentMonth];
 		info2.day = preDayCnt - info.weekday + 2;
 		firstDate = [NSDate dateWithDateComponents:info2];
 		
@@ -177,11 +177,11 @@ static UIImage *tileImage;
 	
 	
 	
-	NSInteger daysInMonth = [currentMonth daysBetweenDate:nextMonth];		
+	NSInteger daysInMonth = [currentMonth daysBetweenDate:nextMonth];
 	info.day = daysInMonth;
 	NSDate *lastInMonth = [NSDate dateWithDateComponents:info];
 	NSDateComponents *lastDateInfo = [lastInMonth dateComponentsWithTimeZone:timeZone];
-
+    
 	
 	
 	if(lastDateInfo.weekday < 7 && sunday){
@@ -194,17 +194,17 @@ static UIImage *tileImage;
 			lastDateInfo.year++;
 		}
 		lastDate = [NSDate dateWithDateComponents:lastDateInfo];
-	
+        
 	}else if(!sunday && lastDateInfo.weekday != 1){
 		
 		
 		lastDateInfo.day = 8 - lastDateInfo.weekday;
 		lastDateInfo.month++;
 		if(lastDateInfo.month>12){ lastDateInfo.month = 1; lastDateInfo.year++; }
-
+        
 		
 		lastDate = [NSDate dateWithDateComponents:lastDateInfo];
-
+        
 	}else{
 		lastDate = lastInMonth;
 	}
@@ -217,7 +217,7 @@ static UIImage *tileImage;
 
 - (id) initWithMonth:(NSDate*)date marks:(NSArray*)markArray startDayOnSunday:(BOOL)sunday timeZone:(NSTimeZone*)timeZone{
 	if(!(self=[super initWithFrame:CGRectZero])) return nil;
-
+    
 	
 	self.timeZone = timeZone;
 	
@@ -264,8 +264,8 @@ static UIImage *tileImage;
 	[self.selectedImageView addSubview:self.currentDay];
 	[self.selectedImageView addSubview:self.dot];
 	self.multipleTouchEnabled = NO;
-
-
+    
+    
 	return self;
 }
 - (void) setTarget:(id)t action:(SEL)a{
@@ -282,12 +282,12 @@ static UIImage *tileImage;
 	return CGRectMake(col*46-1, row*44+6, 46, 44);
 }
 - (void) drawTileInRect:(CGRect)r day:(NSInteger)day mark:(BOOL)mark font:(UIFont*)f1 font2:(UIFont*)f2 context:(CGContextRef)context{
-
+    
     NSString *str = [numberFormatter stringFromNumber:@(day)];
 	r.size.height -= 2;
 	
 	CGContextSetPatternPhase(context, CGSizeMake(r.origin.x, r.origin.y - 2));
-
+    
 	
 	[str drawInRect: r
 		   withFont: f1
@@ -300,12 +300,12 @@ static UIImage *tileImage;
 		
 		[@"•" drawInRect: r
 				withFont: f2
-		   lineBreakMode: NSLineBreakByWordWrapping 
+		   lineBreakMode: NSLineBreakByWordWrapping
 			   alignment: NSTextAlignmentCenter];
 	}
 	
-
-
+    
+    
 }
 - (void) drawRect:(CGRect)rect {
 	
@@ -330,15 +330,15 @@ static UIImage *tileImage;
     CGColorSpaceRef myColorSpace = CGColorSpaceCreateDeviceRGB();
     CGColorRef whiteColor = CGColorCreate(myColorSpace, myColorValues);
 	CGContextSetShadowWithColor(context, CGSizeMake(0,1), 0, whiteColor);
-
+    
 	float darkColorValues[] = {0, 0, 0, .5};
     CGColorRef darkColor = CGColorCreate(myColorSpace, darkColorValues);
 	
-
+    
 	NSInteger index = 0, mc = self.marks.count;
 	
 	
-	UIFont *font = [UIFont boldSystemFontOfSize:DATE_FONT_SIZE];
+	UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:20];
 	UIFont *font2 =[UIFont boldSystemFontOfSize:DOT_FONT_SIZE];
 	UIColor *color = grayGradientColor;
 	
@@ -349,7 +349,7 @@ static UIImage *tileImage;
 			
 			BOOL mark = mc > 0 && index < mc ? [self.marks[index] boolValue] : NO;
 			[self drawTileInRect:r day:i mark:mark font:font font2:font2 context:context];
-
+            
 			index++;
 		}
 	}
@@ -358,7 +358,7 @@ static UIImage *tileImage;
 	color = gradientColor;
 	[color set];
 	
-
+    
 	
 	
 	for(NSInteger i=1; i <= daysInMonth; i++){
@@ -406,8 +406,8 @@ static UIImage *tileImage;
 	
 	selectedDay = day;
 	selectedPortion = 1;
-	self.currentDay.font = [UIFont boldSystemFontOfSize:DATE_FONT_SIZE];
-
+	self.currentDay.font = [UIFont fontWithName:@"HelveticaNeue" size:18];
+    
 	
 	BOOL hasDot = NO;
 	
@@ -425,7 +425,7 @@ static UIImage *tileImage;
 		markWasOnToday = NO;
 	}
 	
-		
+    
 	self.currentDay.text = [numberFormatter stringFromNumber:@(day)];
 	
 	if (self.marks.count > 0) {
@@ -442,7 +442,7 @@ static UIImage *tileImage;
 		column = 6;
 		row--;
 	}
-
+    
 	self.selectedImageView.frame = CGRectMakeWithSize((column*46)-1, (row*44)-1, self.selectedImageView.frame.size);
 	[self addSubview:self.selectedImageView];
 	
@@ -460,7 +460,7 @@ static UIImage *tileImage;
 	info.day = selectedDay;
 	NSDate *d = [NSDate dateWithDateComponents:info];
 	
-		
+    
 	
 	return d;
 	
@@ -497,7 +497,7 @@ static UIImage *tileImage;
 		day = row * 7 + column  - firstWeekday+2;
 		if(!startOnSunday) day++;
 		if(!startOnSunday && fir==6) day -= 7;
-
+        
 	}
 	if(portion > 0 && day > daysInMonth){
 		portion = 2;
@@ -529,7 +529,7 @@ static UIImage *tileImage;
 	}
 	
 	[self addSubview:self.selectedImageView];
-	self.currentDay.text = [NSString stringWithFormat:@"%ld",(long)day];
+	self.currentDay.text = [NSString stringWithFormat:@"%d",day];
 	
 	if (self.marks.count > 0) {
 		if([self.marks[row * 7 + column] boolValue])
@@ -540,7 +540,7 @@ static UIImage *tileImage;
 		[self.dot removeFromSuperview];
 	}
 	
-
+    
 	
 	
 	self.selectedImageView.frame = CGRectMakeWithSize((column*46)-1, (row*44)-1, self.selectedImageView.frame.size);
@@ -564,7 +564,7 @@ static UIImage *tileImage;
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 	//[super touchesBegan:touches withEvent:event];
 	[self reactToTouch:[touches anyObject] down:NO];
-} 
+}
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
 	[self reactToTouch:[touches anyObject] down:NO];
 }
@@ -575,7 +575,7 @@ static UIImage *tileImage;
 #pragma mark Properties
 - (UILabel *) currentDay{
 	if(_currentDay) return _currentDay;
-
+    
 	CGRect r = self.selectedImageView.bounds;
 	r.origin.y -= 1;
 	_currentDay = [[UILabel alloc] initWithFrame:r];
@@ -651,14 +651,14 @@ static UIImage *tileImage;
 	self.timeZone = timeZone;
 	self.sunday = s;
 	
-	[self addSubview:self.dropshadow];
+    //	[self addSubview:self.dropshadow];
 	[self addSubview:self.topBackground];
 	[self addSubview:self.leftArrow];
 	[self addSubview:self.rightArrow];
 	[self addSubview:self.tileBox];
 	[self addSubview:self.monthYear];
-	[self addSubview:self.shadow];
-
+    //	[self addSubview:self.shadow];
+    
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	dateFormat.dateFormat = @"eee";
 	dateFormat.timeZone = self.timeZone;
@@ -672,7 +672,7 @@ static UIImage *tileImage;
 	
 	
 	NSString * sun = [dateFormat stringFromDate:[NSDate dateWithDateComponents:sund]];
-
+    
 	sund.day = 6;
 	NSString *mon = [dateFormat stringFromDate:[NSDate dateWithDateComponents:sund]];
 	
@@ -719,9 +719,10 @@ static UIImage *tileImage;
         
 		label.text = s;
 		label.textAlignment = NSTextAlignmentCenter;
-		label.shadowColor = [UIColor whiteColor];
-		label.shadowOffset = CGSizeMake(0, 1);
-		label.font = [UIFont boldSystemFontOfSize:10];
+        //		label.shadowColor = [UIColor whiteColor];
+        //		label.shadowOffset = CGSizeMake(0, 1);
+        //		label.font = [UIFont boldSystemFontOfSize:10];
+        label.font = [UIFont fontWithName:@"HelveticaNeue" size:10.0f];
 		label.backgroundColor = [UIColor clearColor];
 		label.textColor = TEXT_COLOR;
 		i++;
@@ -761,10 +762,10 @@ static UIImage *tileImage;
 	
 	self.currentTile = [[TKCalendarMonthTiles alloc] initWithMonth:month marks:data startDayOnSunday:self.sunday timeZone:self.timeZone];
 	[self.currentTile setTarget:self action:@selector(_tileSelectedWithData:)];
-	
 	[self.tileBox addSubview:self.currentTile];
 	
 	self.monthYear.text = [date monthYearStringWithTimeZone:self.timeZone];
+    self.monthYear.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
 	[self _updateSubviewFramesWithTile:self.currentTile];
 	
 }
@@ -772,12 +773,13 @@ static UIImage *tileImage;
 	return CGRectMakeWithPoint(self.frame.origin, VIEW_WIDTH, self.tileBox.bounds.size.height + self.tileBox.frame.origin.y);
 }
 - (CGRect) _calculatedDropShadowFrame{
-	return CGRectMake(0, self.tileBox.bounds.size.height + self.tileBox.frame.origin.y, self.bounds.size.width, 6);
+    return CGRectMake(0, 0, 0, 0);
+    //	return CGRectMake(0, self.tileBox.bounds.size.height + self.tileBox.frame.origin.y, self.bounds.size.width, 6);
 }
 - (void) _updateSubviewFramesWithTile:(UIView*)tile{
 	self.tileBox.frame = CGRectMake(0, TOP_BAR_HEIGHT-1,VIEW_WIDTH, tile.frame.size.height);
 	self.frame = CGRectMakeWithPoint(self.frame.origin, VIEW_WIDTH, self.tileBox.frame.size.height+self.tileBox.frame.origin.y);
-	self.shadow.frame = self.tileBox.frame;
+	self.shadow.frame = CGRectMake(0, 0, 0, 0);
 	self.dropshadow.frame = [self _calculatedDropShadowFrame];
 }
 
@@ -885,7 +887,7 @@ static UIImage *tileImage;
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.1];
 	newTile.alpha = 1;
-
+    
 	[UIView commitAnimations];
 	
 	
@@ -910,14 +912,14 @@ static UIImage *tileImage;
 	}
 	
 	[self _updateSubviewFramesWithTile:newTile];
-
+    
 	[UIView commitAnimations];
 	
 	self.oldTile = self.currentTile;
 	self.currentTile = newTile;
 	_monthYear.text = [localNextMonth monthYearStringWithTimeZone:self.timeZone];
 	
-
+    
 }
 - (void) animationEnded{
 	self.userInteractionEnabled = YES;
@@ -931,7 +933,8 @@ static UIImage *tileImage;
 	if(_topBackground) return _topBackground;
 	
 	TKGradientView *gradient = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, TOP_BAR_HEIGHT)];
-	gradient.colors = @[[UIColor colorWithHex:0xf4f4f5],[UIColor colorWithHex:0xccccd1]];
+    //	gradient.colors = @[[UIColor colorWithHex:0xf4f4f5],[UIColor colorWithHex:0xccccd1]];
+    gradient.colors = @[[UIColor colorWithHex:0xf4f4f5], [UIColor colorWithHex:0xf4f4f5]];
 	gradient.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 44, gradient.bounds.size.width, 1)];
 	line.backgroundColor = [UIColor colorWithHex:0xaaaeb6];
@@ -944,7 +947,7 @@ static UIImage *tileImage;
 }
 - (UILabel *) monthYear{
 	if(_monthYear) return _monthYear;
-
+    
 	_monthYear = [[UILabel alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, VIEW_WIDTH, 36), 40, 6)];
 	_monthYear.textAlignment = NSTextAlignmentCenter;
 	_monthYear.backgroundColor = [UIColor clearColor];
@@ -956,7 +959,7 @@ static UIImage *tileImage;
 }
 - (UIButton *) leftArrow{
 	if(_leftArrow) return _leftArrow;
-
+    
 	_leftArrow = [UIButton buttonWithType:UIButtonTypeCustom];
 	_leftArrow.tag = 0;
 	_leftArrow.frame = CGRectMake(0, 0, 52, 36);
@@ -967,7 +970,7 @@ static UIImage *tileImage;
 }
 - (UIButton *) rightArrow{
 	if(_rightArrow) return _rightArrow;
-
+    
 	_rightArrow = [UIButton buttonWithType:UIButtonTypeCustom];
 	_rightArrow.tag = 1;
 	_rightArrow.frame = CGRectMake(VIEW_WIDTH-52, 0, 52, 36);
@@ -1076,3 +1079,4 @@ static UIImage *tileImage;
 
 
 @end
+
